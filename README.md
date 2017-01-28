@@ -1,8 +1,8 @@
 # FlightsWebAPI
-Dieses Repository beinhaltet das beispielhafte WebAPI-Projekt für meinen gemeinsamen Java Magazin Artikel mit [Manfred Steyer](https://www.softwarearchitekt.at/) und zeigt, wie mittels OIDC/OAuth2 und auf Basis der Identity & Access Management Lösung [Keycloak](http://www.keycloak.org/) die Absicherung einer WebAPI erfolgen kann.
+Dieses Repository beinhaltet das beispielhafte WebAPI-Projekt für meinen gemeinsamen Artikel mit [Manfred Steyer](https://www.softwarearchitekt.at/) und zeigt, wie mittels OIDC/OAuth2 und auf Basis der Identity & Access Management Lösung [Keycloak](http://www.keycloak.org/) die Absicherung einer WebAPI erfolgen kann.
 
 #### Spring Boot WebAPI 
-Ausgangspunkt für die Absicherung des Backends mittels OIDC/Oauth2 stellt eine sehr simpel gestrickte, auf Spring Boot basierende WebAPI dar, welche es konsumierenden Clients ermöglichen soll, nach Flügen zu suchen. Über Maven werden zunächst die folgenden Abhängigkeiten im *pom.xml* konfiguriert:
+Ausgangspunkt für die Absicherung des Backends mittels OIDC/Oauth2 stellt eine sehr simpel gestrickte, auf [Spring Boot](https://projects.spring.io/spring-boot/) basierende WebAPI dar, welche es konsumierenden Clients ermöglichen soll, nach Flügen zu suchen. Über Maven werden zunächst die folgenden Abhängigkeiten im *pom.xml* konfiguriert:
 
 ```xml
     <parent>
@@ -28,7 +28,7 @@ Ausgangspunkt für die Absicherung des Backends mittels OIDC/Oauth2 stellt eine 
 ```
 
 
-Das Domänenmodell der WebAPI besteht lediglich aus einer einzigen Entitätsklasse namens Flight, welche Attribute von Flügen kapselt. Zu Demostrationszwecken und weil es sich der Angular-Client so erwartet, werden die beiden String Attribute origin sowie destination im Rahmen der JSON Serialisierung mittels *@JsonProperty* Annotationen auf die Key-Namen from bzw. to gemappt. Ebenso wird für den in Java 8 eingeführten LocalDateTime Typ ein vom Client präferiertes Datumsformat angegeben.
+Das Domänenmodell der WebAPI besteht lediglich aus einer einzigen Entitätsklasse namens *Flight*, welche Attribute von Flügen kapselt. Zu Demostrationszwecken und weil es sich der Angular-Client so erwartet, werden die beiden String Attribute origin sowie destination im Rahmen der JSON Serialisierung mittels *@JsonProperty* Annotationen auf die Key-Namen from bzw. to gemappt. Ebenso wird für den in Java 8 eingeführten LocalDateTime Typ ein vom Client präferiertes Datumsformat angegeben.
 
 ```java
 @Entity
@@ -71,7 +71,7 @@ Für die korrekte Unterstützung der Java 8 spezifischen Time-API Typen werden e
 </dependency>
 ```
 
-Als Repository für die Flight Entitäten fungiert ein Spring Data CrudRepository. Wir deklarieren dafür lediglich ein paar verschiedene find*-Methoden, um Flüge basierend auf unterschiedlichen Suchangaben finden zu können – Spring Data kümmert sich um die restlichen Details.
+Als Repository für die *Flight* Entitäten fungiert ein [Spring Data](http://projects.spring.io/spring-data/) CrudRepository. Wir deklarieren dafür lediglich ein paar verschiedene *find**-Methoden, um Flüge basierend auf unterschiedlichen Suchangaben finden zu können – Spring Data kümmert sich um die restlichen Details.
 
 ```java
 public interface FlightRepository extends CrudRepository<Flight, Long> {
@@ -83,9 +83,9 @@ public interface FlightRepository extends CrudRepository<Flight, Long> {
 }
 ```
 
-Nachdem sich in den Maven Abhängigenkeiten des Projekts bereits Spring Boot Starter Data JPA sowie H2 als Datenbank befinden, ist die einfache in-memory Persistenz für Flight Entitäten damit bereits verwendbar. Was noch fehlt sind ein paar Demodaten für die WebAPI, welche je nach Präferenz sehr schnell auf zwei verschiedene Arten generiert werden können. Eine Möglichkeit ist es, per Konvention ein SQL-Skript mit INSERT Befehlen in eine Datei namens data.sql unter src/main/resources/ abzulegen. Wer sich mehr Flexibilität wünscht, kann sich im Code eine Liste mit Flight Entitäten generieren und diese mittels eines CommandLineRunner Beans im Flight Repository ablegen. Letztere Variante findet sich als Teil vom letzten Code Snippet ganz unten.
+Nachdem sich in den Maven Abhängigenkeiten des Projekts bereits Spring Boot Starter Data JPA sowie [H2](http://www.h2database.com/) als Datenbank befinden, ist die einfache in-memory Persistenz für *Flight* Entitäten damit bereits verwendbar. Was noch fehlt sind ein paar Demodaten für die WebAPI, welche je nach Präferenz sehr schnell auf zwei verschiedene Arten generiert werden können. Eine Möglichkeit ist es, per Konvention ein SQL-Skript mit INSERT Befehlen in eine Datei namens *data.sql* unter *src/main/resources/* abzulegen. Wer sich mehr Flexibilität wünscht, kann sich im Code eine Liste mit Flight Entitäten generieren und diese mittels eines *CommandLineRunner Beans* im Flight Repository ablegen. Letztere Variante findet sich im Code Snippet ganz unten.
 
-Client-Anwendungen benötigen entsprechende HTTP Endpunkte, um die Flights WebAPI zu konsumieren. Diese werden über einen Spring Controller, genauer gesagt *@RestController* bereitgestellt, welcher das Fight Repository verwendet, um Suchanfragen zu Flügen beantworten zu können. Damit die Client-Anwendung unabhängig von einem anderen Host/Port ausgeliefert werden kann, muss mit *@CrossOrigin* die nötige CORS Einstellung erfolgen. Mit * als Wildcard werden Anfragen von beliebigen Client Domains erlaubt. In realen Projekten sollte dies möglichst restriktiv auf Host/Port Mappings beschränkt sein, von denen Client-Anfragen gewährt werden dürfen.
+Client-Anwendungen benötigen entsprechende HTTP Endpunkte, um die Flights WebAPI zu konsumieren. Diese werden über einen Spring Controller, genauer gesagt *@RestController* bereitgestellt, welcher das *Flight* Repository verwendet, um Suchanfragen zu Flügen beantworten zu können. Damit die Client-Anwendung unabhängig von einem anderen Host/Port ausgeliefert werden kann, muss mit *@CrossOrigin* die nötige [CORS](https://www.w3.org/TR/cors/) Einstellung erfolgen. Mit * als Wildcard werden Anfragen von beliebigen Client Domains erlaubt. In realen Projekten sollte dies möglichst restriktiv auf Host/Port Mappings beschränkt sein, von denen Client-Anfragen gewährt werden dürfen.
 
 ```java
 @RestController
@@ -171,6 +171,8 @@ keycloak.securityConstraints[0].securityCollections[0].authRoles[0] = flightapi_
 keycloak.securityConstraints[0].securityCollections[0].patterns[0] = /api/flight/*
 ```
 Damit ist sichergestellt, dass sämtliche *@RestController* Zugriffe auf _/api/flight/*_ abgesichert sind und der aufrufende Client ein gültiges *Bearer Token* vorweisen muss, welches den *flightapi_user* Claim beinhaltet, um Zugriff zu bekommen.  
+
+Weitere Informationen sowie Details zur Konfiguration von Keycloak selbst sind näher im Artikel beschrieben. 
 
 #### Angular SPA als Client
 Eine beispielhafte Client Implementierung, welche diese WebAPI konsumiert, findet sich in Form einer Angular SPA in folgendem [GitHub Repository von Manfred Steyer](https://github.com/manfredsteyer/angular-oauth2-oidc-sample).
