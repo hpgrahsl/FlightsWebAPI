@@ -1,5 +1,5 @@
 # FlightsWebAPI
-Dieses Repository beinhaltet das beispielhafte WebAPI-Projekt für meinen gemeinsamen Artikel mit [Manfred Steyer](https://www.softwarearchitekt.at/) und zeigt, wie mittels OIDC/OAuth2 und auf Basis der Identity & Access Management Lösung [Keycloak](http://www.keycloak.org/) die Absicherung einer WebAPI erfolgen kann.
+Dieses Repository beinhaltet das beispielhafte WebAPI-Projekt für meinen gemeinsamen [Java Magazin Artikel 04/2017](https://jaxenter.de/ausgaben/java-magazin-4-17) mit [Manfred Steyer](https://www.softwarearchitekt.at/) und zeigt, wie mittels OIDC/OAuth2 und auf Basis der Identity & Access Management Lösung [Keycloak](http://www.keycloak.org/) die Absicherung einer WebAPI erfolgen kann.
 
 #### Spring Boot WebAPI 
 Ausgangspunkt für die Absicherung des Backends mittels OIDC/Oauth2 stellt eine sehr simpel gestrickte, auf [Spring Boot](https://projects.spring.io/spring-boot/) basierende WebAPI dar, welche es konsumierenden Clients ermöglichen soll, nach Flügen zu suchen. Über Maven werden zunächst die folgenden Abhängigkeiten im *pom.xml* konfiguriert:
@@ -8,7 +8,7 @@ Ausgangspunkt für die Absicherung des Backends mittels OIDC/Oauth2 stellt eine 
     <parent>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-parent</artifactId>
-            <version>1.4.3.RELEASE</version>
+            <version>1.5.1.RELEASE</version>
     </parent>
 
     <dependencies>
@@ -142,7 +142,7 @@ private static final List<Flight> FLIGHTS;
 }
 ```
 #### Absicherung mittels Keycloak Adapter
-Für eine Bearer Token-basierte Absicherung der HTTP-Endpunkte des @RestController mittels Keycloak werden zwei Maven Dependencies eingefügt.
+Für eine Bearer Token-basierte Absicherung der HTTP/S-Endpunkte des @RestController mittels Keycloak werden zwei Maven Dependencies eingefügt.
 
 ```xml
     <dependency>
@@ -172,7 +172,24 @@ keycloak.securityConstraints[0].securityCollections[0].patterns[0] = /api/flight
 ```
 Damit ist sichergestellt, dass sämtliche *@RestController* Zugriffe auf _/api/flight/*_ abgesichert sind und der aufrufende Client ein gültiges *Bearer Token* vorweisen muss, welches den *flightapi_user* Claim beinhaltet, um Zugriff zu bekommen.  
 
-Weitere Informationen sowie Details zur Konfiguration von Keycloak selbst sind näher im Artikel beschrieben. 
+Weitere Informationen sowie Details zur Konfiguration von Keycloak selbst sind näher im Java Magazin [Artikel](https://jaxenter.de/ausgaben/java-magazin-4-17) beschrieben. 
 
 #### Angular SPA als Client
 Eine beispielhafte Client Implementierung, welche diese WebAPI konsumiert, findet sich in Form einer Angular SPA in folgendem [GitHub Repository von Manfred Steyer](https://github.com/manfredsteyer/angular-oauth2-oidc-sample).
+
+#### Cloud VM für Demozwecke
+Eine in Microsoft Azure gehostete Keycloak Instanz steht zum Experimentieren bereit und kann testweise statt einer lokalen Installation verwendet werden.
+
+[https://hpg-keycloak.northeurope.cloudapp.azure.com/auth/](https://hpg-keycloak.northeurope.cloudapp.azure.com/auth/)
+
+Zur Anmeldung mittels Angular SPA stehen die folgenden beiden User Accounts bereit:
+
+hanspeter => hp123456$#
+
+manfred => m#$654321
+
+Auch die vorliegende und im Artikel beschriebene Spring Boot WebAPI ist dort gehostet und unter folgender URL für die Angular SPA erreichbar:
+
+[https://hpg-keycloak.northeurope.cloudapp.azure.com:8443/api/flight/](https://hpg-keycloak.northeurope.cloudapp.azure.com:8443/api/flight/)
+
+#### Certificates powered by [letsencrypt](https://letsencrypt.org)
