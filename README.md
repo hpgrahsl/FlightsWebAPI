@@ -178,7 +178,7 @@ Weitere Informationen sowie Details zur Konfiguration von Keycloak selbst sind n
 Eine beispielhafte Client Implementierung, welche diese WebAPI konsumiert, findet sich in Form einer Angular SPA in folgendem [GitHub Repository von Manfred Steyer](https://github.com/manfredsteyer/angular-oauth2-oidc-sample).
 
 #### Cloud VM für Demozwecke
-Eine in Microsoft Azure gehostete Keycloak Instanz steht zum Experimentieren bereit und kann testweise statt einer lokalen Installation verwendet werden.
+Eine in Microsoft Azure gehostete Keycloak Instanz steht zum Experimentieren bereit und kann testweise statt einer lokalen Installation verwendet werden. Die VM läuft von 01.03.-31.03.2017. Bei Interesse zum Ausprobieren danach einfach melden...
 
 [https://hpg-keycloak.northeurope.cloudapp.azure.com/auth/](https://hpg-keycloak.northeurope.cloudapp.azure.com/auth/)
 
